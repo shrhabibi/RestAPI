@@ -49,6 +49,7 @@ namespace RestAPI
                     {
                         user.ID = Convert.ToInt16(reader[0]);
                         user.Benutzername = reader[1].ToString();
+                        user.Kennwort = "********";
                         user.Vorname = reader[3].ToString();
                         user.Nachname = reader[4].ToString();
                         user.Telefonnummer = reader[5].ToString();

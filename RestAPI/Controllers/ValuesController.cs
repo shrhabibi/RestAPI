@@ -16,7 +16,7 @@ namespace RestAPI.Controllers
         [HttpGet]
         public ActionResult<IEnumerable<string>> Get()
         {
-            return new string[] { "API List : api/values/ " };
+            return new string[] { "API List : api/users | api/policy | api/calc " };
         }
 
         // GET api/values/5
