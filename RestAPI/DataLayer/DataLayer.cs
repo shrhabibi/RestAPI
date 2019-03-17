@@ -8,20 +8,20 @@ using System.Threading.Tasks;
 
 namespace RestAPI
 {
-    public static class DataLayer
+    public class DataLayer
     {
-        private static string connString = "Data Source=localhost;Persist Security Info=True;User ID=restapi; Password=Rest6040;";
-        private static SqlConnection conn;
-        private static SqlCommand command;
-        private static StringBuilder ErrorMessages = new StringBuilder();
+        private string connString = "Data Source=localhost;Persist Security Info=True;User ID=restapi; Password=Rest6040;";
+        private SqlConnection conn;
+        private SqlCommand command;
+        private StringBuilder ErrorMessages = new StringBuilder();
 
-        public static string GetException()
+        public string GetException()
         {
             return ErrorMessages.ToString();
         }
 
 
-        public static Benuzer GetUser(string Username, string Password)
+        public Benuzer GetUser(string Username, string Password)
         {
             Benuzer user = new Benuzer();
 
@@ -69,7 +69,7 @@ namespace RestAPI
 
         }
 
-        public static Benuzer GetUser(string Username)
+        public Benuzer GetUser(string Username)
         {
             Benuzer user = new Benuzer();
 
@@ -118,7 +118,7 @@ namespace RestAPI
         }
 
 
-        public static void UpdateUser(Benuzer user)
+        public void UpdateUser(Benuzer user)
         {
             try
             {
@@ -151,7 +151,7 @@ namespace RestAPI
         }
 
 
-        public static List<Versicherungspolice> GetPolicies()
+        public List<Versicherungspolice> GetPolicies()
         {
             try
             {
@@ -187,7 +187,7 @@ namespace RestAPI
             }
         }
 
-        public static List<Versicherungspolice> GetPolicies(string Username)
+        public List<Versicherungspolice> GetPolicies(int UserID)
         {
             List<Versicherungspolice> Versicherungspolicen = GetPolicies();
             try
@@ -198,7 +198,7 @@ namespace RestAPI
 
                     conn = new SqlConnection(connString);
 
-                    string Query = "Select * from Versicherungsvertrag Where Benutzername=@Username";
+                    string Query = "Select * from Versicherungsvertrag Where Benutzer=@Benutzer";
 
                     conn = new SqlConnection(connString);
 
@@ -207,7 +207,7 @@ namespace RestAPI
                     command.Connection.Open();
                     command.CommandText = Query;
 
-                    SqlParameter username = new SqlParameter("@Username", Username);
+                    SqlParameter username = new SqlParameter("@Benutzer", UserID);
 
 
                     command.Parameters.AddRange(new SqlParameter[] { username });

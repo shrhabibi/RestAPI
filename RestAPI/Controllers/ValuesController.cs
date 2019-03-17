@@ -11,7 +11,8 @@ namespace RestAPI.Controllers
     [ApiController]
     public class ValuesController : ControllerBase
     {
-        // GET api/values
+
+        // GET api/valuess
         [HttpGet]
         public ActionResult<IEnumerable<string>> Get()
         {
