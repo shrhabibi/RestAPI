@@ -13,7 +13,6 @@ namespace RestAPI
         private static string connString = "Data Source=localhost;Persist Security Info=True;User ID=restapi; Password=Rest6040;";
         private static SqlConnection conn;
         private static SqlCommand command;
-        private static List<Benuzer> Users;
         private static StringBuilder ErrorMessages = new StringBuilder();
 
         public static string GetException()
@@ -31,7 +30,7 @@ namespace RestAPI
 
                 using (conn)
                 {
-                    string Query = "Select * from Benutzer Where Benutzername=@Username";
+                    string Query = "Select * from Benutzer Where Benutzername=@Username And  Kennwort=@Password;";
 
                     conn = new SqlConnection(connString);
 
@@ -70,7 +69,6 @@ namespace RestAPI
 
         }
 
-
         public static Benuzer GetUser(string Username)
         {
             Benuzer user = new Benuzer();
@@ -80,7 +78,8 @@ namespace RestAPI
 
                 using (conn)
                 {
-                    string Query = "Select * from Benutzer Where Benutzername=@Username And  Kennwort=@Password;";
+
+                    string Query = "Select * from Benutzer Where Benutzername=@Username";
 
                     conn = new SqlConnection(connString);
 
@@ -151,6 +150,90 @@ namespace RestAPI
             }
         }
 
+
+        public static List<Versicherungspolice> GetPolicies()
+        {
+            try
+            {
+                using (conn)
+                {
+                    List<Versicherungspolice> versicherungspolicen = new List<Versicherungspolice>();
+
+                    conn = new SqlConnection(connString);
+
+                    string sqlSelectString = "SELECT * FROM Versicherungspolice";
+                    command = new SqlCommand(sqlSelectString, conn);
+                    command.Connection.Open();
+
+                    SqlDataReader reader = command.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        Versicherungspolice versicherungspolice = new Versicherungspolice();
+                        versicherungspolice.ID = Convert.ToInt16(reader[0]);
+                        versicherungspolice.Name = reader[1].ToString();
+                        versicherungspolice.Beschreibung = reader[2].ToString();
+                        versicherungspolice.Link = reader[3].ToString();
+                        versicherungspolicen.Add(versicherungspolice);
+                    }
+                    command.Connection.Close();
+                    return versicherungspolicen;
+                }
+
+            }
+            catch (Exception ex)
+            {
+                ErrorMessages.Append(ex.Message.ToString());
+                return null;
+            }
+        }
+
+        public static List<Versicherungspolice> GetPolicies(string Username)
+        {
+            List<Versicherungspolice> Versicherungspolicen = GetPolicies();
+            try
+            {
+                using (conn)
+                {
+                    List<Versicherungspolice> Result = new List<Versicherungspolice>();
+
+                    conn = new SqlConnection(connString);
+
+                    string Query = "Select * from Versicherungsvertrag Where Benutzername=@Username";
+
+                    conn = new SqlConnection(connString);
+
+                    command = new SqlCommand();
+                    command.Connection = conn;
+                    command.Connection.Open();
+                    command.CommandText = Query;
+
+                    SqlParameter username = new SqlParameter("@Username", Username);
+
+
+                    command.Parameters.AddRange(new SqlParameter[] { username });
+                    SqlDataReader reader = command.ExecuteReader();
+
+                    while (reader.Read())
+                    {
+                        Versicherungsvertrag versicherungsvertrag = new Versicherungsvertrag();
+                        versicherungsvertrag.ID = Convert.ToInt16(reader[0]);
+                        versicherungsvertrag.Benutzer = Convert.ToInt16(reader[1]);
+                        versicherungsvertrag.Versicherungspolice = Convert.ToInt16(reader[2]);
+
+                        Versicherungsvertrag Versicherungspolice = new Versicherungsvertrag();
+                        Result.Add(Versicherungspolicen.Where(w => w.ID==versicherungsvertrag.Versicherungspolice).First());
+                    }
+                    command.Connection.Close();
+                    return Result;
+                }
+
+            }
+            catch (Exception ex)
+            {
+                ErrorMessages.Append(ex.Message.ToString());
+                return null;
+            }
+        }
 
 
     }
