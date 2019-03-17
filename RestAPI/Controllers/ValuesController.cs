@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 
+
 namespace RestAPI.Controllers
 {
     [Route("api/[controller]")]
@@ -14,7 +15,7 @@ namespace RestAPI.Controllers
         [HttpGet]
         public ActionResult<IEnumerable<string>> Get()
         {
-            return new string[] { "value1", "value2" };
+            return new string[] { "API List : api/values/ " };
         }
 
         // GET api/values/5
